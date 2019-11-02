@@ -18,8 +18,7 @@ type : python3 Watermark_Signature_Keywords.py
 And then: open a new terminal,
 
 For keyword extraction,
-
-**curl POST -H "Content-Type: application/json" -d '{"title":"Book_Title","abstract":"Book_Abstract"} http://127.0.0.1:5000/keywords **
+**curl POST -H "Content-Type: application/json" -d '{"title":"Book_Title","abstract":"Book_Abstract"} http://127.0.0.1:5000/keywords**
 
 For Digital watermarking,
 **curl  -F file=@Chapter_2.pdf -F name="author_name" http://127.0.0.1:5000/watermark**
@@ -31,4 +30,4 @@ For Signature Verification,
 **curl  -F file=@Chapter_2.pdf -F a=74088... -F g=714654... -F h=68608.... -F p=140051... -F q=12897... -F r=41985... -F s=91988..  http://127.0.0.1:5000/verification**
 
 
-**NOTE: The values of a,g,h,p,q,r,s can be got after running /digital **
+**NOTE: The values of a,g,h,p,q,r,s can be got after running /digital**
