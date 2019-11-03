@@ -3,7 +3,7 @@
 
 ## REQUIREMENTS : flask, nltk, PyPDF2, panda
 
- ********* Note: This script contains five section *******
+ ********* Note: This script contains three section *******
 
  1. Keywords extraction section as /keywords === INPUT: JSON data >> { "title" : "value", "abstract" : "abstract_value" }
  2. Digital watermarking section as /watermark === INPUT: form-data >> pdf_file and author_name
