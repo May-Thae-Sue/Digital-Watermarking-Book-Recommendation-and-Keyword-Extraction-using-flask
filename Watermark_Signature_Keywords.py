@@ -131,6 +131,7 @@ def digital():
     output_string = ""
     for i in keywords:
         output_string += i + " "
+    output_string = output_string.lower()
     return sign(output_string)
     
 def extractPdfText(filePath=''):
@@ -350,6 +351,7 @@ def verification():
 	output_string = ""
 	for i in keywords:
 		output_string += i + " "
+	output_string = output_string.lower()	
 	t1= shaHash (output_string)
 	inverseC2 = computeInverse(c2,q)
 	t1 = (t1*inverseC2)%q
