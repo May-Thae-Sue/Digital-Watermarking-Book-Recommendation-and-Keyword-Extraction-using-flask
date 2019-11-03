@@ -1,7 +1,7 @@
 
-# Digital-Watermarking, Book Recommendation and-Keyword-Extraction-using-flask
+Digital-Watermarking, Book Recommendation and-Keyword-Extraction-using-flask
 
-# REQUIREMENTS : flask, nltk, PyPDF2, panda
+REQUIREMENTS : flask, nltk, PyPDF2, panda
 
  ********* Note: This script contains three section *******
 
