@@ -52,8 +52,6 @@ def extract():
 	}),200)
 
 
-
-
 ################### WATERMARKING ##############################
 ############ THIS SECTION IS WATERMARK SECTION##############
 
@@ -113,12 +111,9 @@ def uploaded_file(filename):
 	return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
 
 
-
-
 ######## BOOK RECOMMENDATION ###########
-@app.route('/recommendation',methods=['POST'])
-# @app.route('/')
 
+@app.route('/recommendation',methods=['POST'])
 def recommendation():
     bk = request.get_json()
 
@@ -143,9 +138,6 @@ def recommendation():
     path = path.translate(str.maketrans({'[':'',']':'','\'':''}))
     print("path",path) ## path for keyword extracted json
 
-    ## Start ##
-    # nltk.data.path.append('./nltk_data/')
-    ## Start ##
     with open(path) as books:
         df = pd.read_json(books) ## books is json string
     # print(df)
