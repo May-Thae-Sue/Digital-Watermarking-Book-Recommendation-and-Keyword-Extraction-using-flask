@@ -55,19 +55,30 @@ def extract():
 ################### WATERMARKING ##############################
 ############ THIS SECTION IS WATERMARK SECTION##############
 
-DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/downloads/'
-app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
-UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/uploads/'
-filename = ""
-for filename in os.listdir(UPLOAD_FOLDER):
-    filename = filename
+
    
 @app.route('/watermark', methods=['POST'])
+DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/watermarked/'
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/storage/'
+CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/'
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 def index():
 	data = request.get_json()
 	author = data['authorname']
+	filepath = data['pdfpath']
+	fullpath = UPLOAD_FOLDER+filepath
+	filename = re.sub('.*/','',filepath)
+	if os.path.exists(CURRENT_FOLDER+filename):
+		os.remove(CURRENT_FOLDER+filename)
+		shutil.copy(fullpath,filename)
+	else:
+		shutil.copy(fullpath,filename)
 	process_file(filename,author)
+	os.remove(CURRENT_FOLDER+filename)
+	return make_response(jsonify({
+	"watermarked" : filename
+	}),200)
 	return redirect(url_for('uploaded_file', filename=filename))
 
 def process_file(path, author):
