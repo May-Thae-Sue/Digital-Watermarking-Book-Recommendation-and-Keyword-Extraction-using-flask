@@ -1,0 +1,9 @@
+numpy
+flask
+nltk
+PyPDF2
+pandas
+Werkzeug
+textract
+reportlab
+sklearn
