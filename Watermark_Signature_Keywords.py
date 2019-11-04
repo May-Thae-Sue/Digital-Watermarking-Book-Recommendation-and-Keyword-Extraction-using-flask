@@ -15,6 +15,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import linear_kernel
 import pandas as pd
+import shutil
 
 ## REQUIREMENTS : flask, nltk, PyPDF2, textract, panda, sklearn
 
