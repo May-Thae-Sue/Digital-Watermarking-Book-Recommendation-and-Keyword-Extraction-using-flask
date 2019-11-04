@@ -57,12 +57,12 @@ def extract():
 ############ THIS SECTION IS WATERMARK SECTION##############
 
 
-   
-@app.route('/watermark', methods=['POST'])
 DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/watermarked/'
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/storage/'
 CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/'
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
+@app.route('/watermark', methods=['POST'])
 
 def index():
 	data = request.get_json()
