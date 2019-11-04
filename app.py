@@ -57,25 +57,19 @@ def extract():
 
 DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/downloads/'
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/uploads/'
+filename = ""
+for filename in os.listdir(UPLOAD_FOLDER):
+    filename = filename
    
 @app.route('/watermark', methods=['POST'])
 
 def index():
-	file = request.files['file']
-	author = request.form['name']
-	if file.filename == '':
-		print('No file selected')
-			#return redirect(request.url)
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		file.save(filename)
-		process_file(filename,author)
-		return redirect(url_for('uploaded_file', filename=filename))
+	data = request.get_json()
+	author = data['authorname']
+	process_file(filename,author)
+	return redirect(url_for('uploaded_file', filename=filename))
 
-ALLOWED_EXTENSIONS = set(['pdf'])
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-	
 def process_file(path, author):
 	watermark(path,author)
 
