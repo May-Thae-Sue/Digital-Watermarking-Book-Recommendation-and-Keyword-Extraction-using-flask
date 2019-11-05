@@ -16,6 +16,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import linear_kernel
 import pandas as pd
 import shutil
+import string
 
 ## REQUIREMENTS : flask, nltk, PyPDF2, textract, panda, sklearn
 
@@ -27,16 +28,12 @@ import shutil
 app = Flask(__name__)
 
 output = []
-DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + 'storage/watermarked/'
-UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + 'storage/'
-CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/'
-app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 
 @app.route('/keywords', methods=['POST'])
 def extract():
     data = request.get_json()
-    nltk.data.path.append('./nltk_data/')
+    nltk.data.path.append('/nltk_data/')
     title = data['title']
     abstract = data['abstract']
 
@@ -61,6 +58,15 @@ def extract():
 
 ################### WATERMARKING ##############################
 ############ THIS SECTION IS WATERMARK SECTION##############
+
+
+# DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/watermarked/'
+# UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/storage/'
+DOWNLOAD_FOLDER = '/storage/watermarked/'
+UPLOAD_FOLDER = '/storage/'
+# CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/'
+CURRENT_FOLDER = '/'
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 
 @app.route('/watermark', methods=['POST'])
@@ -124,6 +130,7 @@ def uploaded_file(filename):
 
 @app.route('/recommendation', methods=['POST'])
 def recommendation():
+    nltk.data.path.append('/nltk_data/')
     bk = request.get_json()
 
     # ###### Example  #################
@@ -137,15 +144,8 @@ def recommendation():
     # print(bk)
     # #################################
 
-    bk_id = bk['book_id']
+    num = bk['book_id']
     path = bk['json_file']
-    print(bk_id.values, path.values)
-    num = str(bk_id.values)
-    path = str(os.path.dirname(os.path.abspath(__file__)) + 'books/' + path.values)
-    num = int(num.replace("[", "").replace("]", ""))  ## chosen id from web
-    print("chosen id", num)
-    path = path.translate(str.maketrans({'[': '', ']': '', '\'': ''}))
-    print("path", path)  ## path for keyword extracted json
 
     with open(path) as books:
         df = pd.read_json(books)  ## books is json string
@@ -201,29 +201,29 @@ def recommendation():
         # Return the top 10 most similar books using integar-location based indexing (iloc)
         return df['title'].iloc[books_index]
 
-    # print(check)
+    print("check", check)
     # input the index of the book and get top 10 book recommendation
     row_no = str(check[check['book_id'] == num].index.values)
     row_no = int(row_no.replace("[", "").replace("]", ""))  ## chosen id from web
-    # print("Index values for recommendation",row_no)
-    recom = recommend(row_no, cosine_similarity)  ## need to edit, chosen id from web instead of 1
-
-    book_id = []
-    # for book title
-    book_title = []
-    for book in recom:
-        book_title.append(book)
-    check = check.set_index('title')
-    for i in range(len(book_title)):
-        book_id.append(int(check.loc[book_title[i], 'book_id']))  # for book Id
-
-    # for bookId and Title json
-    output_json = []
-    for i in range(len(book_title)):
-        output_json.append({"book_id": book_id[i], "book_title": book_title[i]})
-    print(output_json)
-    return make_response(jsonify(output_json), 200)
-    # return "hello"
+    print("Index values for recommendation", row_no)
+    return check
+    # recom = recommend(row_no, cosine_similarity)  ## need to edit, chosen id from web instead of 1
+    #
+    # book_id = []
+    # # for book title
+    # book_title = []
+    # for book in recom:
+    #     book_title.append(book)
+    # check = check.set_index('title')
+    # for i in range(len(book_title)):
+    #     book_id.append(int(check.loc[book_title[i], 'book_id']))  # for book Id
+    #
+    # # for bookId and Title json
+    # output_json = []
+    # for i in range(len(book_title)):
+    #     output_json.append({"book_id": book_id[i], "book_title": book_title[i]})
+    # print(output_json)
+    # return make_response(jsonify(output_json), 200)
 
 
 if __name__ == '__main__':

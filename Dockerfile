@@ -7,9 +7,11 @@ COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m nltk.downloader -d ./nltk_data all
 # RUN apk update && apk add bash
-COPY . .
-ENV FLASK_APP /app.py
+COPY . /app
+
+ENV FLASK_APP /app/app.py
 ENV FLASK_RUN_HOST 0.0.0.0
 ENV FLASK_DEBUG=1
 ENV FLASK_ENV=development
+EXPOSE 5000
 CMD ["flask", "run"]
