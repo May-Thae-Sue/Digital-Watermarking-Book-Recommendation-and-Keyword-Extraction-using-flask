@@ -26,8 +26,6 @@ import shutil
 ## 3. Book Recommendation as /recommendation 
 app = Flask(__name__)
 
-output = []
-
 @app.route('/keywords',methods=['POST'])
 def extract():
 	data = request.get_json()
@@ -38,19 +36,24 @@ def extract():
 	book_title = title.lower()
 	
 	book_stract = abstract.lower()
+	
+	book_stract = re.sub('[\-/]',' ',book_stract)
 
 	input_string = nltk.word_tokenize(book_stract)
 
 	tagged = nltk.pos_tag(input_string)
+	print(tagged)
 
+	output = []
 	for word,tag in enumerate(tagged):
-		if tag[1] == "NN" or tag[1] == "NNS" or tag[1] == "NNP" or tag[1] == "NNPS" or tag[1] == "JJ" or tag[1] == "JJR" or tag[1] == "JJS":
+		if tag[1] == "NN" or tag[1] == "NNS" or  tag[1] = "NNP" or tag[1] == "NNPS" or tag[1] == "JJ" or tag[1] == "JJR" or tag[1] == "JJS":
 			output.append(tag[0])
 
 	return make_response(jsonify({
 	"title" : book_title,
 	"abstract" : output
 	}),200)
+
 
 
 ################### WATERMARKING ##############################
