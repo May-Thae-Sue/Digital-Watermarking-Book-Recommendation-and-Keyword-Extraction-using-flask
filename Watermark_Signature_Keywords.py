@@ -49,12 +49,18 @@ def extract():
     nltk.data.path.append('/nltk_data/')
     title = data['title']
     abstract = data['abstract']
+
     book_title = title.lower()
+
     book_stract = abstract.lower()
+
     book_stract = re.sub('[\-/]', ' ', book_stract)
+
     input_string = nltk.word_tokenize(book_stract)
+
     tagged = nltk.pos_tag(input_string)
     print(tagged)
+
     output = []
     for word, tag in enumerate(tagged):
         if tag[1] == "NN" or tag[1] == "NNS" or tag[1] == "NNP" or tag[1] == "NNPS" or tag[1] == "JJ" or tag[1] == "JJR" or tag[1] == "JJS":
@@ -141,10 +147,9 @@ def recommendation():
     path = bk['json_file']
     path = CURRENT_FOLDER + path
     num = bk_id
-#    num = int(num.replace("[","").replace("]","")) ## chosen id from web
-    print("chosen id", num)
-#    path = path.translate(str.maketrans({'[':'',']':'','\'':''}))
- #   print("path",path) ## path for keyword extracted json
+    #    num = int(num.replace("[","").replace("]","")) ## chosen id from web
+    #    path = path.translate(str.maketrans({'[':'',']':'','\'':''}))
+    #   print("path",path) ## path for keyword extracted json
 
     with open(path) as books:
         df = pd.read_json(books)  # books is json string
@@ -190,37 +195,27 @@ def recommendation():
     # input the index of the book and get top 10 book recommendation
     row_no = str(check[check['book_id'] == num].index.values)
     row_no = int(row_no.replace("[", "").replace("]", ""))
-    #print("THIS IS ROW NO")
-    # print(row_no)
- #   row_no = int(row_no.replace("[","").replace("]","")) ## chosen id from web
     # print("Index values for recommendation",row_no)
     # need to edit, chosen id from web instead of 1
-    recom = recommend(row_no, cosine_similarity, indices, df)
+    recom = recommend(row_no, cosine_similarity, indices, df, check)
 
     book_id = []
     book_title = []
-    for book in recom:
-        book_title.append(book)
-    # print("title",book_title)
-    check = check.set_index('title')
-    for i in range(len(book_title)):
-        book_id.append(int(check.loc[book_title[i], 'book_id']))  # for book Id
-    # print("book_id",book_id)
+    for id in recom:
+        book_id.append(id)
+    check = check.set_index('book_id')
+    for i in range(len(book_id)):
+        book_title.append(check.loc[book_id[i], 'title'])  # for book Id
 
     # for bookId and Title json
     output_json = []
-    #inside = {}
-    for i in range(len(book_title)):
-        ##inside["book_id"] = book_id[i]
-        ##inside["book_title"] = book_title[i]
+    for i in range(len(book_id)):
         output_json.append(
             {"book_id": book_id[i], "book_title": book_title[i]})
-    # print("json",output_json)
     return json.dumps(output_json)
-    # return "hello"
 
 
-def recommend(index, method, indices, df):
+def recommend(index, method, indices, df, check):
 
     id = indices[index]
     # print("id",id)
@@ -235,9 +230,9 @@ def recommend(index, method, indices, df):
     # Get the books index
     books_index = [i[0] for i in similarity_scores]
 
-    # Return the top 10 most similar books using integar-location based indexing (iloc)
+    # Return the top 5 most similar books using integar-location based indexing (iloc)
     # print("result",df['title'].iloc[books_index])
-    return df['title'].iloc[books_index]
+    return check['book_id'].iloc[books_index]
 
 
 if __name__ == '__main__':
