@@ -9,9 +9,10 @@ RUN python -m nltk.downloader -d ./nltk_data all
 # RUN apk update && apk add bash
 COPY . /app
 
-ENV FLASK_APP /app/Watermark_Signature_Keywords.py
+ENV FLASK_APP Watermark_Signature_Keywords.py
 ENV FLASK_RUN_HOST 0.0.0.0
 ENV FLASK_DEBUG=1
 ENV FLASK_ENV=development
 EXPOSE 5000
+RUN cd app
 CMD ["flask", "run"]
